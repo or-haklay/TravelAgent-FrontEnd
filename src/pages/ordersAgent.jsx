@@ -1,0 +1,53 @@
+import useAuth from "../context/auth.Context";
+import orderServices from "../services/ordersServices";
+import userService from "../services/userServices";
+import PageHeader from "../components/common/pageHeader";
+import LoadingSpinner from "../components/common/loadingSpinners";
+import { useState, useEffect } from "react";
+import OrderCard from "../components/orderCard";
+
+function OrdersAgent() {
+  const { user, userData } = useAuth();
+  const [userOrders, setUserOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (user && user._id) {
+        try {
+          const orders = await orderServices.getAllMyOrders(user._id);
+          setUserOrders(orders);
+          console.log(orders);
+        } catch (error) {
+          console.error("Failed to fetch orders:", error);
+        }
+      }
+    };
+    fetchOrders();
+  }, [user]);
+
+  if (!userData) {
+    return (
+      <div className="container">
+        <PageHeader title="My Orders" description={"Loading Orders Data..."} />
+        <LoadingSpinner text={"Loading Orders Data..."} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <PageHeader
+        title="My Orders"
+        description={`Manage and edit all client orders under your responsibility. You have: ${userOrders.length}`}
+      />
+
+      <div className="container row border s-start justify-content-center mt-2 mb-2 p-4 gap-3">
+        {userOrders.map((order) => (
+          <OrderCard order={order} key={order.orderId} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default OrdersAgent;
