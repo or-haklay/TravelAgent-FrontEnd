@@ -105,7 +105,6 @@ function MakeNewOrder() {
 
     onSubmit: async (values) => {
       values.user = userData;
-      console.log("Form Submitted:", values);
       setServerError("");
       try {
         const response = await ordersService.createNewOrder(values);
@@ -132,9 +131,6 @@ function MakeNewOrder() {
       );
     return isTouched && formik.errors[path] ? formik.errors[path] : null;
   };
-
-  console.log("Formik isValid:", formik.isValid);
-  console.log("Formik Errors:", formik.errors);
 
   return (
     <div className="container">

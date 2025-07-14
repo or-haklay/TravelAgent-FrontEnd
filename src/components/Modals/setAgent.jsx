@@ -89,7 +89,7 @@ function SetAgent({ setAgentSet, orderData }) {
   };
 
   const handleClose = () => {
-    setOrderData(null);
+    setAgentSet(null);
   };
 
   return (

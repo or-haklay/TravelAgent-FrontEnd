@@ -1,12 +1,11 @@
 import PageHeader from "../common/pageHeader";
-import userServices from "../../services/userServices";
 
-function AgentContactStatus({ setAgentContactStatus, agentData }) {
+function ContactStatus({ setContactStatus, Data }) {
   const handleClose = () => {
-    setAgentContactStatus(null);
+    setContactStatus(null);
   };
 
-  if (!agentData) return null;
+  if (!Data) return null;
 
   return (
     <div
@@ -30,22 +29,22 @@ function AgentContactStatus({ setAgentContactStatus, agentData }) {
             onClick={handleClose}
           ></button>
         </div>
-        <PageHeader title={"Agent Contact"} />
-        {agentData == "null" ? (
-          "No Agent Contact Info Yet... "
+        <PageHeader title={"Contact"} />
+        {Data == "null" ? (
+          "There Is No Contact Info Yet... "
         ) : (
           <>
             <p>
               <span style={{ fontWeight: "bold" }}>Name:</span>{" "}
-              {agentData.name || "N/A"}
+              {Data.name || "N/A"}
             </p>
             <p>
               <span style={{ fontWeight: "bold" }}>Email:</span>{" "}
-              {agentData.email || "N/A"}
+              {Data.email || "N/A"}
             </p>
             <p>
               <span style={{ fontWeight: "bold" }}>Phone:</span>{" "}
-              {agentData.phone || "N/A"}
+              {Data.phone || "N/A"}
             </p>
           </>
         )}
@@ -53,4 +52,4 @@ function AgentContactStatus({ setAgentContactStatus, agentData }) {
     </div>
   );
 }
-export default AgentContactStatus;
+export default ContactStatus;

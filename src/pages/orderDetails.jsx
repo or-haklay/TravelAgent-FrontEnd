@@ -2,12 +2,11 @@ import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 
 import ordersService from "../services/ordersServices";
-import userService from "../services/userServices";
 import useAuth from "../context/auth.Context";
 
 import PageHeader from "../components/common/pageHeader";
 import LoadingSpinner from "../components/common/loadingSpinners";
-import AgentContactStatus from "../components/Modals/agentContact";
+import ContactStatus from "../components/Modals/contact";
 import DeleteOrder from "../components/Modals/deleteOrder";
 import UpdateOrder from "../components/Modals/updateOrder";
 import DeletePassenger from "../components/Modals/deletePassenger";
@@ -20,7 +19,7 @@ function OrderDetails({ order }) {
   const [orderData, setOrderData] = useState(order);
   const [orderDeleteStatus, setOrderDeleteStatus] = useState(order);
   const [orderUpdateStatus, setOrderUpdateStatus] = useState(null);
-  const [agentContactStatus, setAgentContactStatus] = useState(null);
+  const [contactStatus, setContactStatus] = useState(null);
   const [selectedPassengerIndex, setSelectedPassengerIndex] = useState(null);
   const [passengerDeleteStatus, setPassengerDeleteStatus] = useState(null);
   const [approvalOrderStatus, setApprovalOrderStatus] = useState(null);
@@ -86,10 +85,12 @@ function OrderDetails({ order }) {
   };
   const handleAgentInfo = async () => {
     try {
-      if (!orderData.agent.number) {
-        setAgentContactStatus("null");
+      if (user.isAdmin || user.isAgent) {
+        setContactStatus(orderData.customer);
+      } else if (!orderData.agent || !orderData.agent.number) {
+        setContactStatus("null");
       } else {
-        setAgentContactStatus(orderData.agent);
+        setContactStatus(orderData.agent);
       }
     } catch (error) {
       console.error("Failed to fetch agent data:", error);
@@ -102,7 +103,15 @@ function OrderDetails({ order }) {
   return (
     <div className="container ">
       <div className="my-0 d-flex align-items-center justify-content-end gap-2">
-        {!user.isAdmin && !user.isAgent && (
+        {!user.isAdmin && !user.isAgent ? (
+          <button
+            className="btn btn-info my-2 rounded-circle"
+            title="Agent Contact"
+            onClick={handleAgentInfo}
+          >
+            <i className="bi bi-info-lg"></i>
+          </button>
+        ) : (
           <button
             className="btn btn-info my-2 rounded-circle"
             title="Agent Contact"
@@ -314,10 +323,7 @@ function OrderDetails({ order }) {
         setOrderDeleteStatus={setOrderDeleteStatus}
         orderData={orderDeleteStatus}
       />
-      <AgentContactStatus
-        setAgentContactStatus={setAgentContactStatus}
-        agentData={agentContactStatus}
-      />
+      <ContactStatus setContactStatus={setContactStatus} Data={contactStatus} />
       <UpdateOrder
         setOrderUpdateStatus={setOrderUpdateStatus}
         orderUpdateStatus={orderUpdateStatus}
