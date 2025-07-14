@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../config";
+import config from "../config.json";
 
 axios.defaults.baseURL = config.URL;
 axios.defaults.headers.common["Content-Type"] = "application/json";

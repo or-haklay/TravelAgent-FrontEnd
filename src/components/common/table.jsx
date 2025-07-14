@@ -4,7 +4,7 @@ function Table({ headers, rows }) {
   rows = Array.isArray(rows) ? rows : [];
 
   return (
-    <table className="table table-striped table-bordered table-hover table-sm table-responsive rounded-3">
+    <table className="table table-striped table-bordered table-hover table-sm table-responsive rounded-3 text-center">
       <thead>
         <tr>
           {headers.map((header, index) => (

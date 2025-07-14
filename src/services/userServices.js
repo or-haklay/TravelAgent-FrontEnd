@@ -1,6 +1,5 @@
 import httpServices from "./httpServices";
 import { jwtDecode } from "jwt-decode";
-import { ref } from "joi";
 
 const TOKEN_KEY = "token";
 refreshToken();
@@ -105,6 +104,18 @@ async function changeUserStatus(userId, values) {
   return response.data;
 }
 
+async function getAgentDetails(id) {
+  const response = await httpServices.get(`/users/${id}`);
+  return response.data;
+}
+
+async function getAllAgents() {
+  const response = await httpServices.get("/users");
+  const allUsers = response.data;
+  const agents = allUsers.filter((user) => user.isAgent === true);
+  return agents;
+}
+
 const userService = {
   logIn,
   register,
@@ -116,6 +127,8 @@ const userService = {
   getUserData,
   updateUserData,
   changeUserStatus,
+  getAgentDetails,
+  getAllAgents,
 };
 
 export default userService;

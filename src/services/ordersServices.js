@@ -17,102 +17,117 @@ async function getOrderById(id) {
 
 async function createNewOrder(formData) {
   const newOrder = {
+    customer: {
+      name: formData.user.name.first + " " + formData.user.name.last,
+      email: formData.user.email,
+      phone: formData.user.phone,
+      number: formData.user._id,
+    },
     flight: {
-      flightFrom: formData.flightFrom,
-      flightTo: formData.flightTo,
-      flightDate: formData.flightDate,
-      flightTime: formData.flightTime || "",
-      flightNumber: formData.flightNumber || "",
+      flightFrom: formData.flight.flightFrom,
+      flightTo: formData.flight.flightTo,
+      flightDate: formData.flight.flightDate,
+      flightTime: formData.flight.flightTime,
+      flightNumber: formData.flight.flightNumber,
     },
 
-    returnFlight: formData.returnFlightFrom
-      ? {
-          flightFrom: formData.returnFlightFrom,
-          flightTo: formData.returnFlightTo,
-          flightDate: formData.returnFlightDate,
-          flightTime: formData.returnFlightTime || "",
-          flightNumber: formData.returnFlightNumber || "",
-        }
-      : undefined,
+    returnFlight:
+      formData.returnFlight && formData.returnFlight.flightFrom
+        ? {
+            flightFrom: formData.returnFlight.flightFrom,
+            flightTo: formData.returnFlight.flightTo,
+            flightDate: formData.returnFlight.flightDate,
+            flightTime: formData.returnFlight.flightTime,
+            flightNumber: formData.returnFlight.flightNumber,
+          }
+        : undefined,
 
-    price: formData.price,
-
-    Passengers: formData.passengersArray.map((passenger) => ({
+    Passengers: formData.Passengers.map((passenger) => ({
       firstName: passenger.firstName,
       lastName: passenger.lastName,
       passportNumber: passenger.passportNumber,
       nationality: passenger.nationality,
       dateOfBirth: passenger.dateOfBirth,
       gender: passenger.gender,
+      passportDate: passenger.passportDate,
+      passportCountry: passenger.passportCountry,
     })),
 
     notes: formData.notes || "",
   };
+
+  console.log("Order object to be sent to backend:", newOrder);
+
   const response = await httpServices.post("/orders", newOrder);
   return response.data;
 }
-async function updateOrderByUser(orderId, formData) {
-  const updatedOrderPayload = {};
-  const flightFields = {};
-  if (formData.flightFrom !== undefined)
-    flightFields.flightFrom = formData.flightFrom;
-  if (formData.flightTo !== undefined)
-    flightFields.flightTo = formData.flightTo;
-  if (formData.flightDate !== undefined)
-    flightFields.flightDate = formData.flightDate;
-  if (formData.flightTime !== undefined)
-    flightFields.flightTime = formData.flightTime;
-  if (formData.flightNumber !== undefined)
-    flightFields.flightNumber = formData.flightNumber;
 
-  if (Object.keys(flightFields).length > 0) {
-    updatedOrderPayload.flight = flightFields;
-  }
+async function updateOrder(_id, formData) {
+  const updatedOrderPayload = {
+    flight: {
+      flightFrom: formData.flight.flightFrom ?? undefined,
+      flightTo: formData.flight.flightTo ?? undefined,
+      flightDate: formData.flight.flightDate ?? undefined,
+      flightTime: formData.flight.flightTime ?? undefined,
+      flightNumber: formData.flight.flightNumber ?? undefined,
+    },
 
-  const returnFlightFields = {};
-  if (formData.returnFlightFrom !== undefined)
-    returnFlightFields.returnFlightFrom = formData.returnFlightFrom;
-  if (formData.returnFlightTo !== undefined)
-    returnFlightFields.returnFlightTo = formData.returnFlightTo;
-  if (formData.returnFlightDate !== undefined)
-    returnFlightFields.returnFlightDate = formData.returnFlightDate;
-  if (formData.returnFlightTime !== undefined)
-    returnFlightFields.returnFlightTime = formData.returnFlightTime;
-  if (formData.returnFlightNumber !== undefined)
-    returnFlightFields.returnFlightNumber = formData.returnFlightNumber;
+    returnFlight: formData.returnFlight
+      ? {
+          flightFrom: formData.returnFlight.flightFrom,
+          flightTo: formData.returnFlight.flightTo,
+          flightDate: formData.returnFlight.flightDate,
+          flightTime: formData.returnFlight.flightTime,
+          flightNumber: formData.returnFlight.flightNumber,
+        }
+      : undefined,
 
-  if (Object.keys(returnFlightFields).length > 0) {
-    updatedOrderPayload.returnFlight = returnFlightFields;
-  }
-
-  if (
-    formData.passengersArray !== undefined &&
-    Array.isArray(formData.passengersArray)
-  ) {
-    updatedOrderPayload.Passengers = formData.passengersArray.map(
-      (passenger) => ({
-        firstName: passenger.firstName,
-        lastName: passenger.lastName,
-        passportNumber: passenger.passportNumber,
-        nationality: passenger.nationality,
-        dateOfBirth: passenger.dateOfBirth,
-        gender: passenger.gender,
-      })
-    );
-  }
-
-  if (formData.notes !== undefined) {
-    updatedOrderPayload.notes = formData.notes;
-  }
-
-  if (formData.price !== undefined) {
-    updatedOrderPayload.price = formData.price;
-  }
+    Passengers: formData.Passengers.map((passenger) => ({
+      firstName: passenger.firstName,
+      lastName: passenger.lastName,
+      passportNumber: passenger.passportNumber,
+      nationality: passenger.nationality,
+      dateOfBirth: passenger.dateOfBirth,
+      gender: passenger.gender,
+      passportDate: passenger.passportDate,
+    })),
+    orderStatus: formData.status || undefined,
+    price: formData.price || undefined,
+    notes: formData.notes || "",
+  };
+  console.log("Updated Order Payload:", updatedOrderPayload);
 
   const response = await httpServices.patch(
-    `/orders/${orderId}`,
+    `/orders/${_id}`,
     updatedOrderPayload
   );
+  return response.data;
+}
+
+function deleteOrder(id) {
+  return httpServices.delete(`/orders/${id}`);
+}
+
+async function setAgent(_id, agent) {
+  const request = {
+    agent: {
+      name: agent.name?.first + " " + agent.name?.last,
+      email: agent.email,
+      phone: agent.phone,
+      number: agent._id,
+    },
+  };
+  const response = await httpServices.patch(
+    `/orders/set-agent/${_id}`,
+    request
+  );
+  return response.data;
+}
+
+async function ApproveOrder(_id, value) {
+  const response = await httpServices.patch(`/orders/set-status/${_id}`, {
+    orderStatus: value,
+  });
   return response.data;
 }
 
@@ -121,7 +136,10 @@ const ordersService = {
   getAllMyOrders,
   getOrderById,
   createNewOrder,
-  updateOrderByUser,
+  updateOrder,
+  deleteOrder,
+  setAgent,
+  ApproveOrder,
 };
 
 export default ordersService;

@@ -1,12 +1,15 @@
 import useAuth from "../context/auth.Context";
 import orderServices from "../services/ordersServices";
-import userService from "../services/userServices";
-
+import PageHeader from "../components/common/pageHeader";
+import LoadingSpinner from "../components/common/loadingSpinners";
 import { useState, useEffect } from "react";
+import OrderCard from "../components/orderCard";
+import { useNavigate } from "react-router";
 
 function OrdersUser() {
   const { user, userData } = useAuth();
   const [userOrders, setUserOrders] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -14,7 +17,6 @@ function OrdersUser() {
         try {
           const orders = await orderServices.getAllMyOrders(user._id);
           setUserOrders(orders);
-          console.log(orders);
         } catch (error) {
           console.error("Failed to fetch orders:", error);
         }
@@ -23,38 +25,49 @@ function OrdersUser() {
     fetchOrders();
   }, [user]);
 
-  return (
-    <div className="container row align-items-start justify-content-center mt-5 mb-5 ">
-      {userOrders.map((order) => (
-        <div className="card" style={{ width: "18rem" }} key={order.orderId}>
-          <div className="card-body">
-            <p className=" card-title">flight</p>
-            <h5 className="card-text">
-              {order.flight.flightFrom} to {order.flight.flightTo}
-            </h5>
-            <p className="card-title">return flight</p>
-            {order.returnFlight ? (
-              <>
-                <h5 className="card-text">
-                  {order.returnFlight.flightFrom} to{" "}
-                  {order.returnFlight.flightTo}
-                </h5>
-              </>
-            ) : (
-              <h5 className="card-text">no return flight</h5>
-            )}
-            <p className="card-text">Passengers: {order.Passengers.length}</p>
-            <p className="card-text">Status: '{order.orderStatus}'</p>
-            <p className="card-text">
-              {order.notes ? "Notes: " + order.notes : ""}
-            </p>
+  const handleMakeNewOrder = () => {
+    navigate("/makeNewOrder");
+  };
 
-            <a href="#" className="btn btn-primary">
-              Details
-            </a>
-          </div>
-        </div>
-      ))}
+  if (!userData) {
+    return (
+      <div className="container">
+        <button
+          className="btn btn-primary my-2 col-12 col-md-1 align-self-start"
+          onClick={handleMakeNewOrder}
+          title="Add New"
+        >
+          <i className="bi bi-plus-circle"></i>
+        </button>
+        <PageHeader title="My Orders" description={"Loading Orders Data..."} />
+        <LoadingSpinner text={"Loading Orders Data..."} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="container align-items-center">
+      <div className="my-2 align-self-end">
+        <button
+          className="btn btn-primary my-2 col-12 col-md-1 align-self-start"
+          onClick={handleMakeNewOrder}
+          title="Add New"
+        >
+          <i className="bi bi-plus-circle"></i>
+        </button>
+      </div>
+      <PageHeader
+        title="My Orders"
+        description={`Watch all your's orders and make new ones. You have: ${userOrders.length}`}
+      />
+
+      <div className="container row border s-start justify-content-center mt-2 mb-2 p-4 gap-3">
+        {userOrders.map((order) => (
+          <OrderCard order={order} key={order._id} />
+        ))}
+
+        {userOrders.length === 0 && "You have no orders yet."}
+      </div>
     </div>
   );
 }

@@ -10,6 +10,10 @@ import Logout from "./pages/logOut";
 import OrdersUser from "./pages/ordersUser";
 import OrdersAgent from "./pages/ordersAgent";
 import EditUser from "./pages/editUser";
+import OrderDetails from "./pages/orderDetails";
+import MakeNewOrder from "./pages/makeNewOrder";
+import OrdersManager from "./pages/ordersManager";
+import CoinsConverter from "./miniapps/coinsConverter";
 
 function App() {
   return (
@@ -27,6 +31,10 @@ function App() {
           <Route path="/ordersUser" element={<OrdersUser />} />
           <Route path="/ordersAgent" element={<OrdersAgent />} />
           <Route path="/editUser" element={<EditUser />} />
+          <Route path="/orders/:id" element={<OrderDetails />} />
+          <Route path="/makeNewOrder" element={<MakeNewOrder />} />
+          <Route path="/ordersManager" element={<OrdersManager />} />
+          <Route path="/coinsConverter" element={<CoinsConverter />} />
         </Routes>
       </main>
       <footer className="footer"></footer>

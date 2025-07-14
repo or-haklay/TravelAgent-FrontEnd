@@ -58,6 +58,18 @@ function NavBar() {
                 Orders
               </NavLink>
             </li>
+            <li
+              className="nav-item dropdown"
+              style={{ display: user?.isAdmin ? "block" : "none" }}
+            >
+              <NavLink
+                to="/ordersManager"
+                className="nav-link "
+                aria-current="page"
+              >
+                Orders Manager
+              </NavLink>
+            </li>
           </ul>
 
           <ul className="navbar-nav mr-5  pr-5 mb-2 mb-lg-0 d-flex align-items-center">

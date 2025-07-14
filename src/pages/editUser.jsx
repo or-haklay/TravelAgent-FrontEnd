@@ -28,7 +28,9 @@ function EditUser() {
       houseNumber: userData?.address?.houseNumber,
       zip: userData?.address?.zip,
       passportNumber: userData?.passport?.passportNumber,
-      passportDate: userData?.passport?.passportDate,
+      passportDate: userData.passport?.passportDate
+        ? new Date(userData.passport?.passportDate).toISOString().split("T")[0]
+        : "",
       passportCountry: userData?.passport?.passportCountry,
     },
     enableReinitialize: true,
