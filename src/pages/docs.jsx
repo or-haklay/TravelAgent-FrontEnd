@@ -1,7 +1,7 @@
-function About() {
+function Docs() {
   return (
-    <div className="container mt-5 pt-5 mb-5 gap-4 d-flex flex-column align-items-center justify-content-center text-center">
-      <h1>About</h1>
+    <div className="container mt-5 pt-5 mb-5 gap-4 d-flex flex-column">
+      <h1>Docs</h1>
       <p>
         I've always been drawn to the world of technology, but after my military
         service, I decided to turn that curiosity into a profession. From the
@@ -28,4 +28,4 @@ function About() {
   );
 }
 
-export default About;
+export default Docs;

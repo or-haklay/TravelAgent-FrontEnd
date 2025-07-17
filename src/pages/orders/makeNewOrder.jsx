@@ -1,12 +1,34 @@
-import { useFormik, FieldArray, FormikProvider } from "formik";
-import PageHeader from "../components/common/pageHeader.jsx";
-import Input from "../components/common/input.jsx";
+import { useFormik, FieldArray, FormikProvider, getIn } from "formik";
+import PageHeader from "../../components/common/pageHeader.jsx";
+import Input from "../../components/common/input.jsx";
 import Joi from "joi";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import ordersService from "../services/ordersServices";
-import useAuth from "../context/auth.context.jsx";
+import ordersService from "../../services/ordersServices.js";
+import useAuth from "../../context/auth.context.jsx";
+
+// פונקציית עזר להמרת שגיאות Joi למבנה שגיאות מקונן של Formik
+const joiToFormikErrors = (joiError) => {
+  if (!joiError) {
+    return {};
+  }
+
+  const errors = {};
+  joiError.details.forEach((detail) => {
+    let current = errors;
+    const path = detail.path;
+    for (let i = 0; i < path.length - 1; i++) {
+      const key = path[i];
+      if (!current[key]) {
+        current[key] = typeof path[i + 1] === "number" ? [] : {};
+      }
+      current = current[key];
+    }
+    current[path[path.length - 1]] = detail.message;
+  });
+  return errors;
+};
 
 function MakeNewOrder() {
   const { userData } = useAuth();
@@ -38,6 +60,8 @@ function MakeNewOrder() {
   });
 
   const formik = useFormik({
+    validateOnChange: true,
+    validateOnBlur: true,
     validateOnMount: true,
     initialValues: {
       flight: {
@@ -46,9 +70,9 @@ function MakeNewOrder() {
         flightDate: "",
       },
       returnFlight: {
-        returnFlightFrom: "",
-        returnFlightTo: "",
-        returnFlightDate: "",
+        flightFrom: "",
+        flightTo: "",
+        flightDate: "",
       },
       Passengers: [
         {
@@ -66,16 +90,32 @@ function MakeNewOrder() {
     validate: (values) => {
       const schema = Joi.object({
         flight: Joi.object({
-          flightFrom: Joi.string().required().trim().label("Flight From"),
+          flightFrom: Joi.string()
+            .required()
+            .trim()
+            .label("Flight From")
+            .min(2),
           flightTo: Joi.string().required().trim().label("Flight To"),
-          flightDate: Joi.date().required().label("Flight Date"),
+          flightDate: Joi.date().required().min("now").label("Flight Date"),
         })
           .required()
           .label("Flight Details"),
         returnFlight: Joi.object({
-          returnFlightFrom: Joi.string().trim().label("Return Flight From"),
-          returnFlightTo: Joi.string().trim().label("Return Flight To"),
-          returnFlightDate: Joi.date().label("Return Flight Date"),
+          flightFrom: Joi.string()
+            .trim()
+            .label("Return Flight From")
+            .optional()
+            .allow(""),
+          flightTo: Joi.string()
+            .trim()
+            .label("Return Flight To")
+            .optional()
+            .allow(""),
+          flightDate: Joi.date()
+            .label("Return Flight Date")
+            .min("now")
+            .optional()
+            .allow(""),
         })
           .optional()
           .label("Return Flight Details"),
@@ -90,8 +130,9 @@ function MakeNewOrder() {
       });
 
       const { error } = schema.validate(values, { abortEarly: false });
+      return joiToFormikErrors(error);
 
-      if (!error) {
+      /*  if (!error) {
         return {};
       }
 
@@ -100,13 +141,15 @@ function MakeNewOrder() {
         const path = detail.path.join(".");
         errors[path] = detail.message;
       }
-      return errors;
+      return errors; */
     },
 
     onSubmit: async (values) => {
       values.user = userData;
       setServerError("");
+
       try {
+        console.log("Form values before sending to services:", values);
         const response = await ordersService.createNewOrder(values);
         toast.success("New order created successfully!");
         navigate("/ordersUser");
@@ -122,14 +165,13 @@ function MakeNewOrder() {
     },
   });
 
+  console.log("Formik errors:", formik.errors);
+  console.log("Formik touched:", formik.touched);
+
   const getNestedError = (path) => {
-    const isTouched = path
-      .split(".")
-      .reduce(
-        (obj, key) => (obj && obj[key] !== undefined ? obj[key] : undefined),
-        formik.touched
-      );
-    return isTouched && formik.errors[path] ? formik.errors[path] : null;
+    const isTouched = getIn(formik.touched, path);
+    const error = getIn(formik.errors, path);
+    return isTouched && error ? error : null;
   };
 
   return (
@@ -154,6 +196,7 @@ function MakeNewOrder() {
               width="col-md-3 col-12"
               required
             />
+
             <Input
               {...formik.getFieldProps("flight.flightTo")}
               label="Flight To"
@@ -177,26 +220,26 @@ function MakeNewOrder() {
           <h4>Return Flight (Optional)</h4>
           <div className="d-flex flex-column flex-md-row gap-2 flex-wrap align-items-center justify-content-around">
             <Input
-              {...formik.getFieldProps("returnFlight.returnFlightFrom")}
+              {...formik.getFieldProps("returnFlight.flightFrom")}
               label="Return Flight From"
               type="text"
-              error={getNestedError("returnFlight.returnFlightFrom")}
+              error={getNestedError("returnFlight.flightFrom")}
               placeholder="JFK"
               width="col-md-3 col-12"
             />
             <Input
-              {...formik.getFieldProps("returnFlight.returnFlightTo")}
+              {...formik.getFieldProps("returnFlight.flightTo")}
               label="Return Flight To"
               type="text"
-              error={getNestedError("returnFlight.returnFlightTo")}
+              error={getNestedError("returnFlight.flightTo")}
               placeholder="TLV"
               width="col-md-3 col-12"
             />
             <Input
-              {...formik.getFieldProps("returnFlight.returnFlightDate")}
+              {...formik.getFieldProps("returnFlight.flightDate")}
               label="Return Flight Date"
               type="date"
-              error={getNestedError("returnFlight.returnFlightDate")}
+              error={getNestedError("returnFlight.flightDate")}
               width="col-md-3 col-12"
             />
           </div>
@@ -221,6 +264,7 @@ function MakeNewOrder() {
                         width="col-md-4"
                         required
                       />
+
                       <Input
                         {...formik.getFieldProps(
                           `Passengers[${index}].lastName`
@@ -254,7 +298,7 @@ function MakeNewOrder() {
                         label="Nationality (2-letter code)"
                         type="text"
                         error={getNestedError(
-                          `Passengers[${index}}.nationality`
+                          `Passengers[${index}].nationality`
                         )}
                         placeholder="IL"
                         width="col-md-4"
@@ -279,6 +323,7 @@ function MakeNewOrder() {
                         >
                           Gender
                         </label>
+                        <span className="text-danger ms-1">*</span>
                         <select
                           className="form-control"
                           {...formik.getFieldProps(
@@ -354,7 +399,7 @@ function MakeNewOrder() {
             name="notes"
             label="Notes (Optional)"
             type="textarea"
-            error={formik.touched.notes && formik.errors.notes}
+            error={getNestedError("notes")}
             placeholder="Any special requests or information..."
             rows="3"
           />

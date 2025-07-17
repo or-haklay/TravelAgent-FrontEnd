@@ -16,6 +16,7 @@ async function getOrderById(id) {
 }
 
 async function createNewOrder(formData) {
+  console.log("Form Data in createNewOrder:", formData);
   const newOrder = {
     customer: {
       name: formData.user.name.first + " " + formData.user.name.last,
@@ -32,9 +33,9 @@ async function createNewOrder(formData) {
     },
 
     returnFlight:
-      formData.returnFlight && formData.returnFlight.flightFrom
+      formData.returnFlight && formData.returnFlight.returnFlightFrom
         ? {
-            flightFrom: formData.returnFlight.flightFrom,
+            flightFrom: formData.returnFlight.returnFlightFrom,
             flightTo: formData.returnFlight.flightTo,
             flightDate: formData.returnFlight.flightDate,
             flightTime: formData.returnFlight.flightTime,
@@ -92,10 +93,9 @@ async function updateOrder(_id, formData) {
       passportDate: passenger.passportDate,
     })),
     orderStatus: formData.status || undefined,
-    price: formData.price || undefined,
+    price: formData.price || 0,
     notes: formData.notes || "",
   };
-  console.log("Updated Order Payload:", updatedOrderPayload);
 
   const response = await httpServices.patch(
     `/orders/${_id}`,
@@ -109,18 +109,26 @@ function deleteOrder(id) {
 }
 
 async function setAgent(_id, agent) {
-  const request = {
-    agent: {
-      name: agent.name?.first + " " + agent.name?.last,
-      email: agent.email,
-      phone: agent.phone,
-      number: agent._id,
-    },
-  };
-  const response = await httpServices.patch(
-    `/orders/set-agent/${_id}`,
-    request
-  );
+  let response;
+  if (agent) {
+    console.log("Setting agent for order:", _id, "with agent:", agent);
+    const request = {
+      agent: {
+        name: agent.name?.first + " " + agent.name?.last,
+        email: agent.email,
+        phone: agent.phone,
+        number: agent._id,
+      },
+    };
+    response = await httpServices.patch(`/orders/set-agent/${_id}`, request);
+    console.log("Set Agent Response:", response.data);
+  } else {
+    console.error("No agent provided for setting agent on order:", _id);
+    response = await httpServices.patch(`/orders/set-agent/${_id}`, {
+      agent: null,
+    });
+  }
+
   return response.data;
 }
 

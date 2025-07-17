@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-import coinService from "../services/coinServices";
+import { coinService } from "../../services/appsServices";
 
-import Input from "../components/common/input";
-import PageHeader from "../components/common/pageHeader";
+import Input from "../../components/common/input";
+import PageHeader from "../../components/common/pageHeader";
 
 function CoinsConverter() {
   const [amount, setAmount] = useState(0);

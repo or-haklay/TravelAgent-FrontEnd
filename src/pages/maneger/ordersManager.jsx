@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
-import ordersService from "../services/ordersServices";
-import useAuth from "../context/auth.Context";
+import ordersService from "../../services/ordersServices";
+import useAuth from "../../context/auth.Context";
 import { useNavigate } from "react-router";
 
-import Table from "../components/common/table";
-import PageHeader from "../components/common/pageHeader";
-import LoadingSpinner from "../components/common/loadingSpinners";
-import ProgressBar from "../components/common/progressBar";
-import SetAgent from "../components/Modals/setAgent";
+import Table from "../../components/common/table";
+import PageHeader from "../../components/common/pageHeader";
+import LoadingSpinner from "../../components/common/loadingSpinners";
+import ProgressBar from "../../components/common/progressBar";
+import SetAgent from "../../components/Modals/setAgent";
 
 function OrdersManager() {
   const [orders, setOrders] = useState([]);
@@ -61,13 +61,22 @@ function OrdersManager() {
         );
 
         if (fetchedOrders && fetchedOrders.length > 0) {
-          const headers = ["Order Number", "Date", "Status", "Price", "Agent"];
+          const headers = [
+            "Order Number",
+            "Date",
+            "Status",
+            "Price",
+            "Agent",
+            "Customer",
+          ];
           const rows = fetchedOrders.map((order, index) => [
             <span
               className="fw-bold"
+              style={{ cursor: "pointer" }}
+              title="View Order Details"
               onClick={() => navigate("/orders/" + order._id)}
             >
-              {order._id + 1}
+              {order._id}
             </span>,
             new Date(order.orderDate).toLocaleDateString(),
             <span
@@ -91,10 +100,24 @@ function OrdersManager() {
                 <i className="bi bi-link-45deg fs-5"></i>
               </button>
             ) : (
-              <span className="fw-bold" onClick={() => handleSetAgent(order)}>
+              <span
+                className="fw-bold"
+                style={{ cursor: "pointer" }}
+                title="View Agent Details"
+                onClick={() => handleSetAgent(order)}
+              >
                 {order.agent.name}
               </span>
             ),
+
+            <span
+              className="fw-bold"
+              style={{ cursor: "pointer" }}
+              title="View User Details"
+              onClick={() => navigate("/users/" + order.customer.number)}
+            >
+              {order.customer.name}
+            </span>,
           ]);
           setTableData({ headers, rows });
         }
@@ -109,9 +132,20 @@ function OrdersManager() {
     setAgentSet(order);
   };
 
+  if (!orders || orders.length === 0) {
+    return (
+      <>
+        <PageHeader
+          title={"Orders Manager"}
+          description={"Manage All Orders."}
+        />
+        ; <LoadingSpinner text={"Loading Details..."} />;
+      </>
+    );
+  }
+
   return (
     <div className="container">
-      <PageHeader title={"Orders Manager"} description={"Manage All Orders."} />
       <div className="d-flex">
         <ProgressBar
           title={"Pending Orders"}
@@ -119,7 +153,6 @@ function OrdersManager() {
           color="warning"
           showValue={pendingOrders.length > 0 ? true : false}
           value={pendingOrders.length}
-          onClick={() => navigate("/ordersAgent")}
         />
         <ProgressBar
           title={"in Progress Orders"}
@@ -136,7 +169,6 @@ function OrdersManager() {
           color="primary"
           showValue={waitForCustomerApprovalOrders.length > 0 ? true : false}
           value={waitForCustomerApprovalOrders.length}
-          onClick={() => navigate("/ordersAgent")}
         />
       </div>
       <div className="d-flex">
@@ -157,7 +189,7 @@ function OrdersManager() {
       </div>
 
       <Table headers={tableData.headers} rows={tableData.rows} />
-      <SetAgent orderData={agentSet} setAgentSet={setAgentSet} />
+      {agentSet && <SetAgent orderData={agentSet} setAgentSet={setAgentSet} />}
     </div>
   );
 }

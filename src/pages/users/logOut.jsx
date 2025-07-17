@@ -1,4 +1,4 @@
-import useAuth from "../context/auth.context";
+import useAuth from "../../context/auth.context";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";

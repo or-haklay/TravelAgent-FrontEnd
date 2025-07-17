@@ -233,17 +233,14 @@ function UpdateOrder({
         let updatedOrderPayload = { ...orderData };
         const checkIsOrderReady = () => {
           if (!values.price) {
-            console.error("price.");
             return false;
           } else if (!values.flight.flightTime || !values.flight.flightNumber) {
-            console.error("flight.");
             return false;
           } else if (
             values.returnFlight.flightFrom &&
             (!values.returnFlight.flightTime ||
               !values.returnFlight.flightNumber)
           ) {
-            console.error("returnFlight");
             return false;
           }
           return true;
@@ -271,7 +268,6 @@ function UpdateOrder({
           updatedOrderPayload.Passengers[selectedPassengerIndex] =
             values.editedPassenger;
         }
-        console.log(updatedOrderPayload);
 
         const response = await ordersServices.updateOrder(
           orderData._id,

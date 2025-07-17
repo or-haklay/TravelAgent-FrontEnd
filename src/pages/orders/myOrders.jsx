@@ -1,11 +1,11 @@
-import useAuth from "../context/auth.Context";
-import orderServices from "../services/ordersServices";
-import PageHeader from "../components/common/pageHeader";
-import LoadingSpinner from "../components/common/loadingSpinners";
+import useAuth from "../../context/auth.Context";
+import orderServices from "../../services/ordersServices";
+import PageHeader from "../../components/common/pageHeader";
+import LoadingSpinner from "../../components/common/loadingSpinners";
 import { useState, useEffect } from "react";
-import OrderCard from "../components/orderCard";
+import OrderCard from "../../components/orderCard";
 
-function OrdersAgent() {
+function MyOrders() {
   const { user, userData } = useAuth();
   const [userOrders, setUserOrders] = useState([]);
 
@@ -31,6 +31,17 @@ function OrdersAgent() {
       </div>
     );
   }
+  if (!userOrders || userOrders.length === 0) {
+    return (
+      <>
+        <PageHeader
+          title="My Orders"
+          description={`Manage and edit all client orders under your responsibility. You have: ${userOrders.length}`}
+        />
+        ; <LoadingSpinner text={"Loading Details..."} />;
+      </>
+    );
+  }
 
   return (
     <div className="container">
@@ -50,4 +61,4 @@ function OrdersAgent() {
   );
 }
 
-export default OrdersAgent;
+export default MyOrders;

@@ -33,12 +33,13 @@ function Home() {
     const fetchOrders = async () => {
       try {
         let fetchedOrders = [];
-        if (user?.isAdmin) {
+        if (user.isAdmin) {
           fetchedOrders = await ordersService.getAllOrders();
-        } else if (user?.isAgent) {
+          setOrders(fetchedOrders);
+        } else {
           fetchedOrders = await ordersService.getAllMyOrders();
+          setOrders(fetchedOrders);
         }
-        setOrders(fetchedOrders);
 
         if (fetchedOrders && fetchedOrders.length > 0) {
           const headers = ["Serial Number", "Date", "Status", "Price"];
@@ -57,6 +58,29 @@ function Home() {
     fetchOrders();
   }, []);
 
+  if (!user) {
+    return (
+      <div className="container ">
+        <div className="d-flex flex-column align-items-center justify-content-center gap-3 mt-5 mb-5 bx-shadow p-5 rounded-3 border border-2">
+          <h2>Please log in to view your orders.</h2>
+
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container row align-items-start justify-content-center mt-5 mb-5">
       <div className="col-8 d-flex flex-column gap-3">
@@ -64,9 +88,7 @@ function Home() {
           <PageHeader title={dayTime() + (userData?.name.first || "") + "!"} />
         </div>
         <div className="row bx-shadow px-3 py-3 justify-content-center border border-2 rounded-3">
-          {user?.isAdmin && (
-            <Table headers={tableData2.headers} rows={tableData2.rows} />
-          )}
+          <Table headers={tableData2.headers} rows={tableData2.rows} />
 
           <div className="col-md-6"></div>
         </div>

@@ -48,13 +48,9 @@ function NavBar() {
             </li>
             <li
               className="nav-item dropdown"
-              style={{ display: user ? "block" : "none" }}
+              style={{ display: user && !user.isAdmin ? "block" : "none" }}
             >
-              <NavLink
-                to={user?.isAgent ? "/ordersAgent" : "/ordersUser"}
-                className="nav-link "
-                aria-current="page"
-              >
+              <NavLink to="/myOrders" className="nav-link " aria-current="page">
                 Orders
               </NavLink>
             </li>
@@ -70,20 +66,30 @@ function NavBar() {
                 Orders Manager
               </NavLink>
             </li>
+            <li
+              className="nav-item dropdown"
+              style={{ display: user?.isAdmin ? "block" : "none" }}
+            >
+              <NavLink
+                to="/usersManager"
+                className="nav-link "
+                aria-current="page"
+              >
+                Users Manager
+              </NavLink>
+            </li>
           </ul>
 
-          <ul className="navbar-nav mr-5  pr-5 mb-2 mb-lg-0 d-flex align-items-center">
+          <ul className="navbar-nav mr-5  pr-5 mb-2 mb-lg-0 d-flex align-items-md-center align-items-end ">
             <li className="nav-item">
               <button
-                className="btn   btn-secondary rounded-circle ms-2"
+                className="btn   btn-secondary rounded-circle ms-2 mx-2"
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
               >
                 {theme === "dark" ? (
-                  // Sun icon for dark mode
                   <i className="bi bi-sun-fill"></i>
                 ) : (
-                  // Moon icon for light mode
                   <i className="bi bi-moon-stars-fill"></i>
                 )}
               </button>
@@ -97,7 +103,7 @@ function NavBar() {
                 aria-expanded="false"
               >
                 <div className="d-flex align-items-center ">
-                  <p className="text-white fw-bold mb-0 me-2">
+                  <p className="text-white fw-bold mb-0 me-2 ">
                     {user
                       ? (userData?.name.first || "") +
                         " " +
@@ -140,6 +146,18 @@ function NavBar() {
                     aria-current="page"
                   >
                     LogIn
+                  </NavLink>
+                </li>
+                <li
+                  className="nav-item"
+                  style={{ display: user ? "block" : "none" }}
+                >
+                  <NavLink
+                    to={"/users/" + user?._id}
+                    className="dropdown-item "
+                    aria-current="page"
+                  >
+                    User Details
                   </NavLink>
                 </li>
                 <li

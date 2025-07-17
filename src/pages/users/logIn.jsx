@@ -1,9 +1,9 @@
-import Input from "../components/common/input";
+import Input from "../../components/common/input";
 import { useFormik } from "formik";
 import Joi from "joi";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import useAuth from "../context/auth.context";
+import useAuth from "../../context/auth.context";
 import { toast } from "react-hot-toast";
 
 function LogIn() {
@@ -23,7 +23,7 @@ function LogIn() {
           .min(5)
           .email({ tlds: false })
           .label("Email"),
-        password: Joi.string().min(7).max(20).label("Password").required(),
+        password: Joi.string().min(6).max(20).label("Password").required(),
       });
       const { error } = schema.validate(values, { abortEarly: false });
       if (!error) {

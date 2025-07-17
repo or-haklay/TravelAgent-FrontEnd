@@ -1,15 +1,16 @@
-import PageHeader from "../components/common/pageHeader";
-import Input from "../components/common/input";
-import Joi from "joi";
 import { useFormik } from "formik";
-import useAuth from "../context/auth.context";
+import PageHeader from "../../components/common/pageHeader.jsx";
+import Input from "../../components/common/input.jsx";
+import Joi from "joi";
+import { useState } from "react";
+import useAuth from "../../context/auth.context.jsx";
 import { useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-import { countries } from "../data/countries.js";
-import LoadingSpinner from "../components/common/loadingSpinners";
+import { countries } from "../../data/countries.js";
 
-function EditUser() {
-  const { user, updateUser, userData } = useAuth();
+function Register() {
+  const { register } = useAuth();
+  const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const validCountryNames = countries.flatMap((country) => [
     country.countryCode,
@@ -18,35 +19,42 @@ function EditUser() {
   const { getFieldProps, isValid, handleSubmit, errors, touched } = useFormik({
     validateOnMount: true,
     initialValues: {
-      firstName: userData?.name?.first,
-      lastName: userData?.name?.last,
-      phone: userData?.phone,
-      country: userData?.address?.country,
-      state: userData?.address?.state,
-      city: userData?.address?.city,
-      street: userData?.address?.street,
-      houseNumber: userData?.address?.houseNumber,
-      zip: userData?.address?.zip,
-      passportNumber: userData?.passport?.passportNumber,
-      passportDate: userData.passport?.passportDate
-        ? new Date(userData.passport?.passportDate).toISOString().split("T")[0]
-        : "",
-      passportCountry: userData?.passport?.passportCountry,
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      password: "",
+      country: "",
+      state: "",
+      city: "",
+      street: "",
+      houseNumber: "",
+      zip: "",
+      passportNumber: "",
+      passportDate: "",
+      passportCountry: "",
     },
-    enableReinitialize: true,
     validate: (values) => {
       const schema = Joi.object({
-        firstName: Joi.string().min(2).max(256).label("First Name"),
-        lastName: Joi.string().min(2).max(256).label("Last Name"),
-        phone: Joi.string().min(9).max(12).label("Phone Number"),
-        email: Joi.string().min(5).email({ tlds: false }).label("Email"),
-        password: Joi.string().min(7).max(20).label("Password"),
-        country: Joi.string().min(2).max(256).label("Country"),
+        firstName: Joi.string().required().min(2).max(256).label("First Name"),
+        lastName: Joi.string().required().min(2).max(256).label("Last Name"),
+        phone: Joi.string().required().min(9).max(12).label("Phone Number"),
+        email: Joi.string()
+          .required()
+          .min(5)
+          .email({ tlds: false })
+          .label("Email"),
+        password: Joi.string().min(7).max(20).label("Password").required(),
+        country: Joi.string().min(2).max(256).label("Country").required(),
         state: Joi.string().min(2).max(256).label("State"),
-        city: Joi.string().min(2).max(256).label("City"),
-        street: Joi.string().min(2).max(256).label("Street"),
-        houseNumber: Joi.number().min(0).max(256).label("House Number"),
-        zip: Joi.number().label("Zip Code"),
+        city: Joi.string().min(2).max(256).label("City").required(),
+        street: Joi.string().min(2).max(256).label("Street").required(),
+        houseNumber: Joi.number()
+          .min(0)
+          .max(256)
+          .label("House Number")
+          .required(),
+        zip: Joi.number().label("Zip Code").required(),
         passportNumber: Joi.string().label("Passport Number"),
         passportDate: Joi.date().label("Passport Date Expiry"),
         passportCountry: Joi.string()
@@ -74,32 +82,29 @@ function EditUser() {
     },
 
     onSubmit: async (values) => {
+      console.log(values);
+
       try {
-        const response = await updateUser(values, user?._id);
+        const response = await register(values);
         console.log(response.data);
         navigate("/");
-        toast.success("User Updated Successfully");
+        toast.success("Registration successful! Please sign in.");
       } catch (err) {
         console.log(err);
-        toast.error("Something went wrong");
+        if (err.status === 409) {
+          toast.error("User already exists. Please try a different email.");
+        } else {
+          toast.error("An unexpected error occurred. Please try again later.");
+        }
       }
     },
   });
 
-  if (!userData) {
-    return (
-      <div className="container mt-5">
-        <PageHeader title="Edit User" description={"Loading User Data..."} />
-        <LoadingSpinner text={"Loading User Data..."} />
-      </div>
-    );
-  }
-
   return (
     <div className="container">
       <PageHeader
-        title="Edit User"
-        description={"This Page Is For Editing User"}
+        title="Register"
+        description={"This Page Is For Registering New User"}
       />
       <form
         onSubmit={handleSubmit}
@@ -114,6 +119,7 @@ function EditUser() {
             error={touched.firstName && errors.firstName}
             placeholder="Israel"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("lastName")}
@@ -123,6 +129,7 @@ function EditUser() {
             error={touched.lastName && errors.lastName}
             placeholder="Israeli"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("phone")}
@@ -132,6 +139,28 @@ function EditUser() {
             error={touched.phone && errors.phone}
             placeholder="055-555-5555"
             width="col-md-4"
+            required
+          />
+        </div>
+        <div className=" d-flex flex-column flex-md-row gap-3 justify-content-center">
+          <Input
+            {...getFieldProps("email")}
+            name="email"
+            label="Email"
+            type="email"
+            error={touched.email && errors.email}
+            placeholder="name@domain.com"
+            width="col-md-4"
+            required
+          />
+          <Input
+            {...getFieldProps("password")}
+            name="password"
+            label="Password"
+            type="password"
+            error={touched.password && errors.password}
+            width="col-md-4"
+            required
           />
         </div>
         <hr />
@@ -144,6 +173,7 @@ function EditUser() {
             error={touched.country && errors.country}
             placeholder="Israel"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("state")}
@@ -162,6 +192,7 @@ function EditUser() {
             error={touched.city && errors.city}
             placeholder="Tel-Aviv"
             width="col-md-4"
+            required
           />
         </div>
         <div className=" d-flex flex-column flex-md-row gap-3 justify-content-center align-items-md-end">
@@ -173,6 +204,7 @@ function EditUser() {
             error={touched.street && errors.street}
             placeholder="Rothschild"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("houseNumber")}
@@ -182,6 +214,7 @@ function EditUser() {
             error={touched.houseNumber && errors.houseNumber}
             placeholder="123"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("zip")}
@@ -191,6 +224,7 @@ function EditUser() {
             error={touched.zip && errors.zip}
             placeholder="11223344"
             width="col-md-4"
+            required
           />
         </div>
         <hr />
@@ -203,6 +237,7 @@ function EditUser() {
             error={touched.passportNumber && errors.passportNumber}
             placeholder="123456789"
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("passportDate")}
@@ -211,6 +246,7 @@ function EditUser() {
             type="date"
             error={touched.passportDate && errors.passportDate}
             width="col-md-4"
+            required
           />
           <Input
             {...getFieldProps("passportCountry")}
@@ -220,6 +256,7 @@ function EditUser() {
             error={touched.passportCountry && errors.passportCountry}
             placeholder="IL"
             width="col-md-4"
+            required
           />
         </div>
         <div className="my-2">
@@ -236,4 +273,4 @@ function EditUser() {
   );
 }
 
-export default EditUser;
+export default Register;

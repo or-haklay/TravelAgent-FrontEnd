@@ -12,6 +12,7 @@ import PageHeader from "../common/pageHeader";
 
 function SetAgent({ setAgentSet, orderData }) {
   if (!orderData) return null;
+  console.log("Order Data:", orderData);
 
   const [agents, setAgents] = useState([]);
   const [serverError, setServerError] = useState("");
@@ -57,8 +58,6 @@ function SetAgent({ setAgentSet, orderData }) {
 
     onSubmit: async (values) => {
       setServerError("");
-      console.log(values);
-      console.log("Form Submitted:", values);
       try {
         const selectedAgent = agents.find(
           (agent) => agent._id === values.agent

@@ -4,16 +4,19 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
 import About from "./pages/about";
-import Register from "./pages/register";
-import LogIn from "./pages/logIn";
-import Logout from "./pages/logOut";
-import OrdersUser from "./pages/ordersUser";
-import OrdersAgent from "./pages/ordersAgent";
-import EditUser from "./pages/editUser";
-import OrderDetails from "./pages/orderDetails";
-import MakeNewOrder from "./pages/makeNewOrder";
-import OrdersManager from "./pages/ordersManager";
-import CoinsConverter from "./miniapps/coinsConverter";
+import Register from "./pages/users/register";
+import LogIn from "./pages/users/logIn";
+import Logout from "./pages/users/logOut";
+import MyOrders from "./pages/orders/myOrders";
+import EditUser from "./pages/users/editUser";
+import OrderDetails from "./pages/orders/orderDetails";
+import MakeNewOrder from "./pages/orders/makeNewOrder";
+import OrdersManager from "./pages/maneger/ordersManager";
+import CoinsConverter from "./pages/miniapps/coinsConverter";
+import Weather from "./pages/miniapps/weather";
+import UserManager from "./pages/maneger/usersManager";
+import UserDetails from "./pages/users/userDetails";
+import Docs from "./pages/docs";
 
 function App() {
   return (
@@ -23,18 +26,25 @@ function App() {
       </header>
       <main className="container mt-5 pt-5 mb-5 ">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/docs" element={<Docs />} />
+          {/* User related routes */}
           <Route path="/register" element={<Register />} />
           <Route path="/logIn" element={<LogIn />} />
           <Route path="/logOut" element={<Logout />} />
-          <Route path="/ordersUser" element={<OrdersUser />} />
-          <Route path="/ordersAgent" element={<OrdersAgent />} />
           <Route path="/editUser" element={<EditUser />} />
+          <Route path="/usersManager" element={<UserManager />} />
+          <Route path="/users/:id" element={<UserDetails />} />
+          {/* Nested routes for orders */}
+          <Route path="/myOrders" element={<MyOrders />} />
           <Route path="/orders/:id" element={<OrderDetails />} />
           <Route path="/makeNewOrder" element={<MakeNewOrder />} />
           <Route path="/ordersManager" element={<OrdersManager />} />
+          {/* Mini apps */}
           <Route path="/coinsConverter" element={<CoinsConverter />} />
+          <Route path="/weather" element={<Weather />} />
         </Routes>
       </main>
       <footer className="footer"></footer>

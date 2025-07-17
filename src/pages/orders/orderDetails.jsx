@@ -1,23 +1,23 @@
 import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 
-import ordersService from "../services/ordersServices";
-import useAuth from "../context/auth.Context";
+import ordersService from "../../services/ordersServices";
+import useAuth from "../../context/auth.Context";
 
-import PageHeader from "../components/common/pageHeader";
-import LoadingSpinner from "../components/common/loadingSpinners";
-import ContactStatus from "../components/Modals/contact";
-import DeleteOrder from "../components/Modals/deleteOrder";
-import UpdateOrder from "../components/Modals/updateOrder";
-import DeletePassenger from "../components/Modals/deletePassenger";
-import ApproveOrder from "../components/Modals/approveOrder";
+import PageHeader from "../../components/common/pageHeader";
+import LoadingSpinner from "../../components/common/loadingSpinners";
+import ContactStatus from "../../components/Modals/contact";
+import DeleteOrder from "../../components/Modals/deleteOrder";
+import UpdateOrder from "../../components/Modals/updateOrder";
+import DeletePassenger from "../../components/Modals/deletePassenger";
+import ApproveOrder from "../../components/Modals/approveOrder";
 
-function OrderDetails({ order }) {
+function OrderDetails() {
   const { user, userData } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [orderData, setOrderData] = useState(order);
-  const [orderDeleteStatus, setOrderDeleteStatus] = useState(order);
+  const [orderData, setOrderData] = useState(null);
+  const [orderDeleteStatus, setOrderDeleteStatus] = useState(null);
   const [orderUpdateStatus, setOrderUpdateStatus] = useState(null);
   const [contactStatus, setContactStatus] = useState(null);
   const [selectedPassengerIndex, setSelectedPassengerIndex] = useState(null);

@@ -24,12 +24,39 @@ function SideBar() {
         <button
           className="btn border-secondary btn-sm mb-2"
           onClick={() => navigate("/coinsConverter")}
+          title="Coin Converter"
         >
           Coin Converter{" "}
           <i className="bi bi-currency-exchange fw-bold fs-5 ms-2 d-none d-md-inline-block" />
         </button>
-        <button className="btn border-secondary btn-sm mb-2 ">Button 1</button>
-        <button className="btn border-secondary btn-sm mb-2 ">Button 2</button>
+        <button
+          className="btn border-secondary btn-sm mb-2"
+          onClick={() => navigate("/weather")}
+          title="Weather Forecast"
+        >
+          Weather{" "}
+          <i className="bi bi bi-cloud-sun fw-bold fs-5 ms-2 d-none d-md-inline-block" />
+        </button>
+        <a
+          className="btn border-secondary btn-sm mb-2"
+          href="https://www.world-airport-codes.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="World Airport Codes - website"
+        >
+          World Airport Codes{" "}
+          <i className="bi bi bi-box-arrow-up-right fw-bold fs-5 ms-2 d-none d-md-inline-block" />
+        </a>
+        <a
+          className="btn border-secondary btn-sm mb-2"
+          href="https://www.flightaware.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="flightaware - website"
+        >
+          Flight Finder{" "}
+          <i className="bi bi bi-box-arrow-up-right fw-bold fs-5 ms-2 d-none d-md-inline-block" />
+        </a>
       </div>
     </div>
   );

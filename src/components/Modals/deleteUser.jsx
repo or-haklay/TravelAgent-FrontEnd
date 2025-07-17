@@ -1,36 +1,25 @@
 import PageHeader from "../common/pageHeader";
-import ordersServices from "../../services/ordersServices";
+import userService from "../../services/userServices";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router";
 
-function DeletePassenger({
-  setPassengerDeleteStatus,
-  orderData,
-  selectedPassengerIndex,
-}) {
-  if (!orderData) return null;
+function DeleteUser({ setUserDelete, userData }) {
+  if (!userData) return null;
+  const navigate = useNavigate();
 
-  const handleDeletePassenger = async () => {
+  const handleDeleteUser = () => {
     try {
-      let updatedOrderPayload = { ...orderData };
-
-      updatedOrderPayload.Passengers = [
-        ...(updatedOrderPayload.Passengers || []),
-      ];
-      updatedOrderPayload.Passengers.pop(selectedPassengerIndex);
-      const response = await ordersServices.updateOrder(
-        orderData._id,
-        updatedOrderPayload
-      );
-      setPassengerDeleteStatus(null);
-      toast.success("Card deleted successfully");
+      userService.deleteUser(userData._id);
+      toast.success("User deleted successfully");
+      navigate("/usersManager");
     } catch (error) {
-      console.error("Error deleting passenger:", error);
-      toast.error("Failed to delete Passenger");
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete User");
     }
   };
 
   const handleClose = () => {
-    setPassengerDeleteStatus(null);
+    setUserDelete(null);
   };
 
   return (
@@ -56,8 +45,8 @@ function DeletePassenger({
           ></button>
         </div>
         <PageHeader
-          title={"Passenger Deletion"}
-          description={"Do You Sure You Want To Delete This Passenger?"}
+          title="User Deletion"
+          description="Do You Sure You Want To Delete This User?"
         />
         <div className="my-2 d-flex align-items-center justify-content-center">
           <button
@@ -65,11 +54,11 @@ function DeletePassenger({
             onClick={handleClose}
             className="btn btn-secondary col-5 col-md-4  mx-auto d-block"
           >
-            cancel
+            Exit
           </button>
           <button
             type="button"
-            onClick={handleDeletePassenger}
+            onClick={handleDeleteUser}
             className="btn btn-danger col-5 col-md-4  mx-auto d-block liveToastBtn"
           >
             Delete
@@ -79,4 +68,4 @@ function DeletePassenger({
     </div>
   );
 }
-export default DeletePassenger;
+export default DeleteUser;
