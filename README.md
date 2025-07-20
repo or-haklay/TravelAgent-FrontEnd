@@ -4,33 +4,39 @@ FLIGHT ORDER MANAGEMENT SYSTEM
 
 A full-stack project simulating a CRM (Customer Relationship Management) system for managing flight orders. The system features user permissions, complex workflows, and data analysis dashboards. It was built using React on the client-side and Node.js with Express on the server-side.
 
---- KEY FEATURES ---
+--- IN-DEPTH FUNCTIONALITY ---
 
-- User Management System:
+Below is a detailed explanation of the system's core features, highlighting the workflows and interactions between the different user types.
 
-  - Secure Registration and Login using JWT and bcrypt.
-  - _3 Permission Levels:_ Customer, Agent, and Admin, each with distinct capabilities.
-  - Personal profile editing.
-  - Password reset by an Administrator.
-  - Admins can change the roles of other users.
+_User Management & Role-Based Access Control_
+The core of the system is a clear separation of permissions between three user types, ensuring security and an organized workflow:
 
-- Order Management Workflow:
+- _Customer:_ The base user role. Customers can create order requests, manage their personal details, and view their own order history. Their interaction is focused on their personal needs.
+- _Agent:_ An internal user role. The agent's responsibility is to take a customer's request, process it, add precise flight details, set the price, and prepare it for final approval. Agents can only access orders assigned to them.
+- _Admin:_ A super-user with full access to all parts of the system. Admins can view and edit all orders, manage all users (including changing roles and resetting passwords), and view dashboards that summarize system activity.
+  The registration process is secured with password hashing (bcrypt) and token-based authentication (JWT).
 
-  - Customers create new order requests with flight and passenger details.
-  - Admins assign orders to agents for processing.
-  - Agents update the order with complete flight details and pricing.
-  - The order is sent to the customer for final approval.
-  - Customers can approve or reject the proposal, which updates the order status.
-  - Admins can edit any order at any stage and are the only ones who can permanently delete them.
+_Order Management Workflow_
+Every order in the system follows a defined lifecycle, ensuring all steps are completed in the correct sequence:
 
-- Admin Dashboards (Admin Only):
+1. _Request Creation:_ A customer creates an initial request with basic details. The order enters the system with a 'Wait For Agent' status.
+2. _Agent Assignment:_ An Admin reviews new orders and assigns each one to an available Agent.
+3. _Order Processing:_ The assigned Agent works on the order, adding all missing details (flight numbers, exact times) and setting the final price. The status changes to 'In Progress'.
+4. _Awaiting Customer Approval:_ Once the Agent's work is done, the order is sent to the customer for final approval. The status changes to 'Pending Customer Approval'.
+5. _Customer's Decision:_ The customer reviews the final offer and can either approve or reject it.
+   - Approval: The status changes to 'Confirmed', and the order is locked from further editing.
+   - Rejection: The status reverts to 'In Progress', and the order is returned to the Agent for corrections.
 
-  - _Orders Manager:_ A graphical overview of all orders by status, and a table for managing all system orders.
-  - _Users Manager:_ Separate tables for customers and agents, and a graphical overview of each agent's workload.
+_Admin Dashboards_
+Administrators have access to dedicated dashboards that provide a high-level 'mission control' view of business activity:
 
-- Mini-Apps:
-  - Currency converter with real-time exchange rates.
-  - Weather application for any city.
+- _Orders Manager:_ Displays a real-time overview of all orders categorized by status, using progress bars for quick analysis. It is a key tool for identifying bottlenecks and assigning new orders.
+- _Users Manager:_ Provides a complete list of all customers and agents. It also includes a visual overview of each agent's _workload_ (number of assigned orders), helping admins distribute tasks efficiently.
+
+_Mini-Apps_
+
+- _Currency Converter:_ A utility for converting amounts between different currencies using real-time exchange rates.
+- _Weather App:_ A simple tool to check the current weather and forecast for any city worldwide.
 
 --- TECHNOLOGY STACK ---
 
