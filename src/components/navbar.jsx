@@ -42,8 +42,8 @@ function NavBar() {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to="/about" className="nav-link " aria-current="page">
-                About
+              <NavLink to="/tutorial" className="nav-link " aria-current="page">
+                Tutorial
               </NavLink>
             </li>
             <li

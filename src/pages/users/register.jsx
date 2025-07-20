@@ -44,7 +44,7 @@ function Register() {
           .min(5)
           .email({ tlds: false })
           .label("Email"),
-        password: Joi.string().min(7).max(20).label("Password").required(),
+        password: Joi.string().min(6).max(20).label("Password").required(),
         country: Joi.string().min(2).max(256).label("Country").required(),
         state: Joi.string().min(2).max(256).label("State"),
         city: Joi.string().min(2).max(256).label("City").required(),

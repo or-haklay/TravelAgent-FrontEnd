@@ -82,13 +82,15 @@ function UserDetails() {
           <i className="bi bi-key-fill"></i>
         </button>
 
-        <button
-          className="btn btn-danger my-2 "
-          title="Delete User"
-          onClick={handleDeleteUser}
-        >
-          <i className="bi bi-trash3"></i>
-        </button>
+        {user.isAdmin && (
+          <button
+            className="btn btn-danger my-2 "
+            title="Delete User"
+            onClick={handleDeleteUser}
+          >
+            <i className="bi bi-trash3"></i>
+          </button>
+        )}
       </div>
       <PageHeader
         title="User Details"

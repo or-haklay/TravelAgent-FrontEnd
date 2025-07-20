@@ -16,7 +16,7 @@ import CoinsConverter from "./pages/miniapps/coinsConverter";
 import Weather from "./pages/miniapps/weather";
 import UserManager from "./pages/maneger/usersManager";
 import UserDetails from "./pages/users/userDetails";
-import Docs from "./pages/docs";
+import Tutorial from "./pages/tutorial";
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/docs" element={<Docs />} />
+          <Route path="/tutorial" element={<Tutorial />} />
           {/* User related routes */}
           <Route path="/register" element={<Register />} />
           <Route path="/logIn" element={<LogIn />} />
