@@ -3,7 +3,6 @@ import { Toaster } from "react-hot-toast";
 
 import Navbar from "./components/navbar";
 import Home from "./pages/home";
-import About from "./pages/about";
 import Register from "./pages/users/register";
 import LogIn from "./pages/users/logIn";
 import Logout from "./pages/users/logOut";
@@ -28,7 +27,6 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/tutorial" element={<Tutorial />} />
           {/* User related routes */}
           <Route path="/register" element={<Register />} />
