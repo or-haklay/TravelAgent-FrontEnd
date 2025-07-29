@@ -11,9 +11,9 @@ function Tutorial() {
   };
 
   return (
-    <div className="container mt-5 pt-5 mb-5 gap-4 d-flex flex-column">
+    <div className=" mt-5 pt-5 mb-5 gap-4 d-flex flex-column">
       <div className="row position-relative">
-        <div className="col-4 col-md-3 position-sticky top-0 start-0 h-100 border-end p-3 my-5">
+        <div className="col-4 col-md-3 position-sticky top-0 start-0 h-100 border-end p-md-3 p-0 my-5">
           <nav
             id="navbar-example3"
             className="h-100 flex-column align-items-stretch pe-4 border-end"

@@ -75,13 +75,7 @@ function OrderDetails() {
   };
 
   const handleReturnToOrders = () => {
-    if (user.isAdmin) {
-      navigate("/ordersManager");
-    } else if (user.isAgent) {
-      navigate("/ordersAgent");
-    } else {
-      navigate("/ordersUser");
-    }
+    navigate("/myOrders");
   };
   const handleAgentInfo = async () => {
     try {

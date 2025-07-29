@@ -82,8 +82,8 @@ function Home() {
   }
 
   return (
-    <div className="container row align-items-start justify-content-center mt-5 mb-5">
-      <div className="col-8 d-flex flex-column gap-3">
+    <div className="container  d-flex flex-md-row flex-column align-items-start justify-content-center mt-5 mb-5 gap-3">
+      <div className="col-md-8 col-12 d-flex flex-column gap-3">
         <div className="row bx-shadow px-3 py-3 justify-content-center border border-2 rounded-3">
           <PageHeader title={dayTime() + (userData?.name.first || "") + "!"} />
         </div>

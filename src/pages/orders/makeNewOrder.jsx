@@ -131,17 +131,6 @@ function MakeNewOrder() {
 
       const { error } = schema.validate(values, { abortEarly: false });
       return joiToFormikErrors(error);
-
-      /*  if (!error) {
-        return {};
-      }
-
-      const errors = {};
-      for (const detail of error.details) {
-        const path = detail.path.join(".");
-        errors[path] = detail.message;
-      }
-      return errors; */
     },
 
     onSubmit: async (values) => {
@@ -152,7 +141,7 @@ function MakeNewOrder() {
         console.log("Form values before sending to services:", values);
         const response = await ordersService.createNewOrder(values);
         toast.success("New order created successfully!");
-        navigate("/ordersUser");
+        navigate("/myOrders");
       } catch (err) {
         console.error("Failed to make new order:", err);
         if (err.response && err.response.data && err.response.data.message) {
