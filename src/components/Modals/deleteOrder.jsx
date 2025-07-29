@@ -2,7 +2,7 @@ import PageHeader from "../common/pageHeader";
 import ordersServices from "../../services/ordersServices";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 import { set } from "lodash";
 
 function DeleteOrder({ setOrderDeleteStatus, orderData }) {

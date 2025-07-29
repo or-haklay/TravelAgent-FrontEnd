@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import userService from "../../services/userServices";
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 
 import PageHeader from "../../components/common/pageHeader";
 import LoadingSpinner from "../../components/common/loadingSpinners";

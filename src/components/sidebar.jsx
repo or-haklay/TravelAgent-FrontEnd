@@ -1,4 +1,4 @@
-import useAuth from "../context/auth.Context";
+import useAuth from "../context/auth.context";
 import { useNavigate } from "react-router";
 
 function SideBar() {

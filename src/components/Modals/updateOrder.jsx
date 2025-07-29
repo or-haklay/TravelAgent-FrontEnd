@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import ordersServices from "../../services/ordersServices";
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 
 import PageHeader from "../common/pageHeader";
 

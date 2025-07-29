@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import userService from "../../services/userServices";
 import ordersService from "../../services/ordersServices";
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 import { useNavigate } from "react-router";
 
 import Table from "../../components/common/table";

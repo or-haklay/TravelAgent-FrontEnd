@@ -1,4 +1,4 @@
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 import orderServices from "../../services/ordersServices";
 import PageHeader from "../../components/common/pageHeader";
 import LoadingSpinner from "../../components/common/loadingSpinners";

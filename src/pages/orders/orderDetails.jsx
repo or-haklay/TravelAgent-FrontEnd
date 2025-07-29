@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { useState, useEffect } from "react";
 
 import ordersService from "../../services/ordersServices";
-import useAuth from "../../context/auth.Context";
+import useAuth from "../../context/auth.context";
 
 import PageHeader from "../../components/common/pageHeader";
 import LoadingSpinner from "../../components/common/loadingSpinners";
