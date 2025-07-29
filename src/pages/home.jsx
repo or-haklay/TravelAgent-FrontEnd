@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "../components/common/table";
 import SideBar from "../components/sidebar";
 import PageHeader from "../components/common/pageHeader";
-import useAuth from "../context/auth.Context";
+import useAuth from "../context/auth.context";
 import { useNavigate } from "react-router";
 import ordersService from "../services/ordersServices";
 
