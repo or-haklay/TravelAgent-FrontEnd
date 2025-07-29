@@ -31,7 +31,7 @@ function MyOrders() {
       </div>
     );
   }
-  if (!userOrders || userOrders.length === 0) {
+  if (!userOrders) {
     return (
       <>
         <PageHeader

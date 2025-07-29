@@ -139,7 +139,7 @@ function OrdersManager() {
           title={"Orders Manager"}
           description={"Manage All Orders."}
         />
-        ; <LoadingSpinner text={"Loading Details..."} />;
+        <LoadingSpinner text={"Loading Details..."} />
       </>
     );
   }
