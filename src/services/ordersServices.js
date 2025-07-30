@@ -33,9 +33,9 @@ async function createNewOrder(formData) {
     },
 
     returnFlight:
-      formData.returnFlight && formData.returnFlight.returnFlightFrom
+      formData.returnFlight && formData.returnFlight.flightFrom
         ? {
-            flightFrom: formData.returnFlight.returnFlightFrom,
+            flightFrom: formData.returnFlight.flightFrom,
             flightTo: formData.returnFlight.flightTo,
             flightDate: formData.returnFlight.flightDate,
             flightTime: formData.returnFlight.flightTime,
@@ -73,15 +73,16 @@ async function updateOrder(_id, formData) {
       flightNumber: formData.flight.flightNumber ?? undefined,
     },
 
-    returnFlight: formData.returnFlight
-      ? {
-          flightFrom: formData.returnFlight.flightFrom,
-          flightTo: formData.returnFlight.flightTo,
-          flightDate: formData.returnFlight.flightDate,
-          flightTime: formData.returnFlight.flightTime,
-          flightNumber: formData.returnFlight.flightNumber,
-        }
-      : undefined,
+    returnFlight:
+      formData.returnFlight && formData.returnFlight.flightFrom
+        ? {
+            flightFrom: formData.returnFlight.flightFrom ?? undefined,
+            flightTo: formData.returnFlight.flightTo ?? undefined,
+            flightDate: formData.returnFlight.flightDate ?? undefined,
+            flightTime: formData.returnFlight.flightTime ?? undefined,
+            flightNumber: formData.returnFlight.flightNumber ?? undefined,
+          }
+        : undefined,
 
     Passengers: formData.Passengers.map((passenger) => ({
       firstName: passenger.firstName,
