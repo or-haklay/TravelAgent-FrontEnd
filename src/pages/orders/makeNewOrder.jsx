@@ -154,9 +154,6 @@ function MakeNewOrder() {
     },
   });
 
-  console.log("Formik errors:", formik.errors);
-  console.log("Formik touched:", formik.touched);
-
   const getNestedError = (path) => {
     const isTouched = getIn(formik.touched, path);
     const error = getIn(formik.errors, path);

@@ -33,8 +33,8 @@ function UpdateOrder({
     flightFrom: Joi.string().trim().allow("").label("Return Flight From"),
     flightTo: Joi.string().trim().allow("").label("Return Flight To"),
     flightDate: Joi.date().allow("").label("Return Flight Date"),
-    flightTime: Joi.string().trim().label("Return Flight Time").allow(""),
-    flightNumber: Joi.string().trim().label("Return Flight Number").allow(""),
+    flightTime: Joi.string().trim().allow("").label("Return Flight Time"),
+    flightNumber: Joi.string().trim().allow("").label("Return Flight Number"),
   });
 
   const passengerSchema = Joi.object({
@@ -131,40 +131,8 @@ function UpdateOrder({
 
       if (orderUpdateStatus === "Flights") {
         currentSchema = Joi.object({
-          flight: Joi.object({
-            flightFrom: Joi.string().trim().label("Flight From"),
-            flightTo: Joi.string().trim().label("Flight To"),
-            flightDate: Joi.date().required().allow("").label("Flight Date"),
-            flightTime: Joi.string()
-              .trim()
-              .label("Flight Time")
-              .allow("")
-              .optional(),
-            flightNumber: Joi.string()
-              .trim()
-              .label("Flight Number")
-              .allow("")
-              .optional(),
-          }).label("Flight Details"),
-          returnFlight: Joi.object({
-            flightFrom: Joi.string()
-              .trim()
-              .allow("")
-              .label("Return Flight From"),
-            flightTo: Joi.string().trim().allow("").label("Return Flight To"),
-            flightDate: Joi.date().allow("").label("Return Flight Date"),
-            flightTime: Joi.string()
-              .trim()
-              .label("Return Flight Time")
-              .allow(""),
-            flightNumber: Joi.string()
-              .trim()
-              .label("Return Flight Number")
-              .allow(""),
-          })
-            .label("Return Flight Details")
-            .optional(),
-
+          flight: flightDetailsSchema,
+          returnFlight: returnFlightDetailsSchema.optional(),
           editedPassenger: passengerSchema.optional(),
           price: Joi.number().allow("").optional().label("Price"),
           status: Joi.string().allow("").optional().label("Status"),
@@ -247,9 +215,23 @@ function UpdateOrder({
         };
         if (orderUpdateStatus === "Flights") {
           updatedOrderPayload.flight = values.flight;
-          if (updatedOrderPayload.returnFlight) {
+          if (
+            values.returnFlight.flightFrom ||
+            values.returnFlight.flightTo ||
+            values.returnFlight.flightDate ||
+            values.returnFlight.flightTime ||
+            values.returnFlight.flightNumber
+          ) {
             updatedOrderPayload.returnFlight = values.returnFlight;
+          } else {
+            updatedOrderPayload.returnFlight = undefined;
           }
+
+          console.log("Updated Flight Details:", updatedOrderPayload.flight);
+          console.log(
+            "Updated Return Flight Details:",
+            updatedOrderPayload.returnFlight
+          );
         } else if (orderUpdateStatus === "General") {
           if (
             values.price != updatedOrderPayload.price &&
@@ -273,6 +255,8 @@ function UpdateOrder({
           orderData._id,
           updatedOrderPayload
         );
+        console.log("Order updated successfully:", response);
+
         toast.success("Order updated successfully!");
         handleClose();
       } catch (err) {
@@ -360,20 +344,24 @@ function UpdateOrder({
                     width="col-12"
                     required
                   />
-                  <Input
-                    {...formik.getFieldProps("flight.flightTime")}
-                    label="Flight Time"
-                    type="time"
-                    error={getNestedError("flight.flightTime")}
-                    width="col-12"
-                  />
-                  <Input
-                    {...formik.getFieldProps("flight.flightNumber")}
-                    label="Flight Number"
-                    type="text"
-                    error={getNestedError("flight.flightNumber")}
-                    width="col-12"
-                  />
+                  {user.isAgent ? (
+                    <>
+                      <Input
+                        {...formik.getFieldProps("flight.flightTime")}
+                        label="Flight Time"
+                        type="time"
+                        error={getNestedError("flight.flightTime")}
+                        width="col-12"
+                      />
+                      <Input
+                        {...formik.getFieldProps("flight.flightNumber")}
+                        label="Flight Number"
+                        type="text"
+                        error={getNestedError("flight.flightNumber")}
+                        width="col-12"
+                      />
+                    </>
+                  ) : null}
                 </div>
 
                 <div className="d-flex flex-column gap-2 flex-wrap align-items-center justify-content-around">
@@ -401,20 +389,24 @@ function UpdateOrder({
                     error={getNestedError("returnFlight.flightDate")}
                     width="col-12"
                   />
-                  <Input
-                    {...formik.getFieldProps("returnFlight.flightTime")}
-                    label="Return Flight Time"
-                    type="time"
-                    error={getNestedError("returnFlight.flightTime")}
-                    width="col-12"
-                  />
-                  <Input
-                    {...formik.getFieldProps("returnFlight.flightNumber")}
-                    label="Return Flight Number"
-                    type="text"
-                    error={getNestedError("returnFlight.flightNumber")}
-                    width="col-12"
-                  />
+                  {user.isAgent ? (
+                    <>
+                      <Input
+                        {...formik.getFieldProps("returnFlight.flightTime")}
+                        label="Return Flight Time"
+                        type="time"
+                        error={getNestedError("returnFlight.flightTime")}
+                        width="col-12"
+                      />
+                      <Input
+                        {...formik.getFieldProps("returnFlight.flightNumber")}
+                        label="Return Flight Number"
+                        type="text"
+                        error={getNestedError("returnFlight.flightNumber")}
+                        width="col-12"
+                      />
+                    </>
+                  ) : null}
                 </div>
               </div>
             )}
