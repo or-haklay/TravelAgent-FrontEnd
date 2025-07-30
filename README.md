@@ -3,6 +3,7 @@ https://travelagentoh.netlify.app/ - live demo
 users:
 
   agent1 - agent1@gmail.com - password123
+  
   customer - customer2@gmail.com - password123
 
 
