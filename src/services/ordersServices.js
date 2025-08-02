@@ -64,6 +64,8 @@ async function createNewOrder(formData) {
 }
 
 async function updateOrder(_id, formData) {
+  console.log("Form Data in updateOrder:", formData);
+  
   const updatedOrderPayload = {
     flight: {
       flightFrom: formData.flight.flightFrom ?? undefined,
